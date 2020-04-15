@@ -1,6 +1,6 @@
 ### 获取
 ```
-git clone git@192.168.10.238:template/force-bytes-scaffold.git
+git clone git@github.com:detanx/react-antd-template.git
 ```
 ### 开始
 ```
