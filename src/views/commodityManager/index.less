@@ -47,13 +47,6 @@
   }
   .com-choose{
     flex-wrap: wrap;
-    .ant-select{
-      width: calc(100% - 70px) !important;
-      &:last-child{
-        margin-top: 20px;
-        margin-left: 70px;
-      }
-    }
   }
   .search-btn{
     position: relative !important;
@@ -67,7 +60,7 @@
   }
   .com-numbers,.com-choose,.search-btn{
     margin-bottom: 20px;
-    width: 90%;
+    width: 95%;
   }
   .com-numbers{
     display: flex;
@@ -75,13 +68,6 @@
   }
   .com-choose{
     flex-wrap: wrap;
-    .ant-select{
-      width: calc(100% - 70px) !important;
-      &:last-child{
-        margin-top: 20px;
-        margin-left: 70px;
-      }
-    }
   }
   .search-btn{
     position: relative !important;
@@ -107,11 +93,17 @@
 }
 @media (max-width: 850px){
   .com-mana-list-item{
-    width: 80%;
+    width: 100%;
+  }
+  .com-mana-search, .com-mana-header{
+    padding-left: 3% !important;
   }
   .com-mana-list-content{
     flex-wrap: wrap;
     justify-content: flex-start !important;
+  }
+  .ant-card-body {
+    padding: 24px 3%;
   }
 }
 
@@ -140,7 +132,7 @@
       align-items: center;
       justify-content: space-between;
       .ant-select{
-        width: 40%;
+        width: 45%;
       }
     }
     .search-btn{
@@ -153,7 +145,19 @@
   .com-mana-list-content{
     width: 100%;
     display: flex;
-    padding: 8px 0;
     justify-content: space-between;
+    .com-mana-list-item{
+      padding: 4px 0;
+    }
+  }
+}
+
+.repeat-hint{
+  padding-left: 80px;
+  color: #ff4d4f;
+}
+@media (max-width: 576px){
+  .repeat-hint{
+    padding-left: 0;
   }
 }

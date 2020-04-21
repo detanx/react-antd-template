@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Button,
   Input,
@@ -9,7 +9,8 @@ import {
   Tag,
   message,
   ConfigProvider,
-  Spin
+  Spin,
+  Card
 } from 'antd';
 import moment from 'moment';
 import { DeleteOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -22,6 +23,8 @@ import './index.less';
 const { Option } = Select;
 
 function CommodityManager() {
+  const hasPermissions = useRef(false);
+  const username = useRef('');
   const [visible, setVisible] = useState(false);
   const [listSpinning, setListSpinning] = useState(false);
   const [handleSpinning, setHandleSpinning] = useState(false);
@@ -35,6 +38,21 @@ function CommodityManager() {
     status: '',
     typeId: 1
   });
+  useEffect(() => {
+    request('/stockserver/user/login-user', 'GET')
+      .then(response => {
+        if (response.status === AXIOS_SUCCESS_CODE) {
+          if (response.data) {
+            const { permissions = [] } = response.data;
+            hasPermissions.current = response.data.isAdmin || permissions.includes(1);
+            username.current = response.data.username;
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
   useEffect(() => {
     getList();
   }, [values.size, values.page]);
@@ -51,7 +69,6 @@ function CommodityManager() {
         console.log(error);
       });
   };
-
   const handleChange = value => {
     if (value === 3) {
       setValues({
@@ -65,22 +82,25 @@ function CommodityManager() {
       setValues({
         ...values,
         ...{
-          status: value
+          status: value,
+          isRepeated: false
         }
       });
     }
   };
-  const showTotal = total => `共 ${total} 条`;
-  const consume = item => {
+  const itemHandle = (item, text) => {
+    const url =
+      text === '删除' ? `/stockserver/stock/${item.id}` : `/stockserver/stock/${item.id}/_consume`;
+    const method = text === '删除' ? 'DELETE' : 'PUT';
     Modal.confirm({
-      content: `请确认消耗${item.code}商品`,
+      content: `请确认${text}${item.code}商品`,
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
-        request(`/stockserver/stock/${item.id}/_consume`, 'PUT', { id: item.id })
+        request(url, method, { id: item.id })
           .then(response => {
             if (response.status === AXIOS_SUCCESS_CODE) {
-              message.success('消耗成功');
+              message.success(`${text}成功`);
               getList();
             }
           })
@@ -90,27 +110,7 @@ function CommodityManager() {
       }
     });
   };
-
-  const deleteClick = item => {
-    Modal.confirm({
-      content: `请确认删除${item.code}商品`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: () => {
-        request(`/stockserver/stock/${item.id}`, 'DELETE', { id: item.id })
-          .then(response => {
-            if (response.status === AXIOS_SUCCESS_CODE) {
-              message.success('删除成功');
-              getList();
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
-    });
-  };
-  const addCommodity = (sendValueObj, setCommodityNums, resetFields) => {
+  const addCommodity = (sendValueObj, setCommodityNums, resetFields, setExistData) => {
     setHandleSpinning(true);
     request('/stockserver/stock', 'POST', sendValueObj)
       .then(response => {
@@ -119,6 +119,7 @@ function CommodityManager() {
           getList();
           setCommodityNums([1]);
           resetFields();
+          setExistData([]);
           setHandleSpinning(false);
           setVisible(false);
         }
@@ -149,78 +150,117 @@ function CommodityManager() {
             </div>
             <div className="com-choose">
               <span style={{ minWidth: 70 }}>商品选择：</span>
-              <Select
-                defaultValue={1}
-                onChange={value => setValues({ ...values, ...{ typeId: value } })}>
-                <Option value={1}>A商品</Option>
-                <Option value={2}>B商品</Option>
-              </Select>
-              <Select defaultValue={''} onChange={handleChange}>
-                <Option value={''}>全部</Option>
-                <Option value={1}>已入库</Option>
-                <Option value={2}>已消耗</Option>
-                <Option value={3}>重复商品</Option>
-              </Select>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  width: 'calc(100% - 70px)'
+                }}>
+                <Select
+                  defaultValue={1}
+                  onChange={value => setValues({ ...values, ...{ typeId: value } })}>
+                  <Option value={1}>A商品</Option>
+                  <Option value={2}>B商品</Option>
+                </Select>
+                <Select defaultValue={''} onChange={handleChange}>
+                  <Option value={''}>全部</Option>
+                  <Option value={1}>已入库</Option>
+                  <Option value={2}>已消耗</Option>
+                  <Option value={3}>重复商品</Option>
+                </Select>
+              </div>
             </div>
             <div className="search-btn">
               <Button onClick={handleSearch} style={{ marginRight: 16 }}>
                 <SearchOutlined />
                 <span>查询</span>
               </Button>
-              <Button type={'primary'} onClick={() => setVisible(true)}>
-                <PlusOutlined />
-                <span>入库</span>
-              </Button>
+              {hasPermissions.current ? (
+                <Button type={'primary'} onClick={() => setVisible(true)}>
+                  <PlusOutlined />
+                  <span>入库</span>
+                </Button>
+              ) : null}
             </div>
           </div>
-          <List
-            style={{ background: '#fff', marginTop: 25 }}
-            bordered
-            dataSource={data}
-            renderItem={item => (
-              <List.Item>
-                <div className="com-mana-list-content">
-                  <span className="com-mana-list-item com-mana-list-item-number">
-                    <span>商品编号：</span>
-                    <span>{item.code}</span>
-                  </span>
-                  <span className="com-mana-list-item com-mana-list-item-status">
-                    <span>状态：</span>
-                    <Tag color={item.status === 1 ? 'green' : 'yellow'}>
-                      {['已入库', '已消耗'][item.status - 1]}
-                    </Tag>
-                  </span>
-                  <span className="com-mana-list-item com-mana-list-item-operator">
-                    <span>操作人：</span>
-                    <span>{item.lastOperator}</span>
-                  </span>
-                  <span className="com-mana-list-item com-mana-list-item-time">
-                    <span>创建时间：</span>
-                    <span>{moment(item.lastOperationTime).format('YYYY/MM/DD HH:mm')}</span>
-                  </span>
-                  <span className="com-mana-list-item com-mana-list-item-handle">
-                    {item.status === 2 ? null : (
-                      <a
-                        style={{ marginRight: 10, cursor: 'pointer' }}
-                        onClick={() => consume(item)}>
-                        <LogoutOutlined />
-                        <span>消耗</span>
-                      </a>
-                    )}
-                    <a style={{ cursor: 'pointer' }} onClick={() => deleteClick(item)}>
-                      <DeleteOutlined />
-                      <span>删除</span>
-                    </a>
-                  </span>
-                </div>
-              </List.Item>
-            )}
-          />
+          <Card style={{ background: '#fff', marginTop: 25, border: 'none' }}>
+            <List
+              bordered
+              renderItem={item => (
+                <List.Item>
+                  <div className="com-mana-list-content">
+                    <span className="com-mana-list-item com-mana-list-item-number">
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        商品编号：
+                      </span>
+                      <span>{item.code}</span>
+                    </span>
+                    <span className="com-mana-list-item com-mana-list-item-number">
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        商品类型：
+                      </span>
+                      <span>{['A商品', 'B商品'][item.typeId - 1]}</span>
+                    </span>
+                    <span className="com-mana-list-item com-mana-list-item-status">
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        状态：
+                      </span>
+                      <Tag color={item.status === 1 ? 'green' : 'yellow'}>
+                        {['已入库', '已消耗'][item.status - 1]}
+                      </Tag>
+                    </span>
+                    <span className="com-mana-list-item com-mana-list-item-operator">
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        操作人：
+                      </span>
+                      <span>{item.lastOperator}</span>
+                    </span>
+                    <span className="com-mana-list-item com-mana-list-item-time">
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        创建时间：
+                      </span>
+                      <span>{moment(item.lastOperationTime).format('YYYY/MM/DD HH:mm')}</span>
+                    </span>
+                    <span
+                      className="com-mana-list-item com-mana-list-item-handle"
+                      style={{
+                        visibility:
+                          hasPermissions.current &&
+                          (username.current === item.lastOperator || username.current === 'admin')
+                            ? 'visible'
+                            : 'hidden'
+                      }}>
+                      <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
+                        操作：
+                      </span>
+                      <span style={{ display: 'inline-block', width: 95, textAlign: 'left' }}>
+                        {item.status === 2 ? null : (
+                          <a
+                            style={{ marginRight: 10, cursor: 'pointer' }}
+                            onClick={() => itemHandle(item, '消耗')}>
+                            <LogoutOutlined />
+                            <span>消耗</span>
+                          </a>
+                        )}
+                        <a style={{ cursor: 'pointer' }} onClick={() => itemHandle(item, '删除')}>
+                          <DeleteOutlined />
+                          <span>删除</span>
+                        </a>
+                      </span>
+                    </span>
+                  </div>
+                </List.Item>
+              )}
+              dataSource={data}
+            />
+          </Card>
+
           <Pagination
             total={responseData.total || 0}
-            showTotal={showTotal}
+            showTotal={total => `共 ${total} 条`}
             current={values.page}
             pageSize={values.size}
+            showSizeChanger={true}
             showQuickJumper={true}
             pageSizeOptions={['10', '20', '30']}
             onChange={page => setValues({ ...values, ...{ page } })}

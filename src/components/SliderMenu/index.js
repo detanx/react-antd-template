@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:31:41
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 14:54:45
+ * @Last Modified time: 2020-04-21 17:37:07
  */
 import React, { useState, useEffect } from 'react';
 import { Menu, Layout, message } from 'antd';
@@ -35,8 +35,8 @@ function SliderMenu(props) {
 
   useEffect(() => {
     request('/stockserver/user/login-user', 'GET')
-      .then(res => {
-        const { status, data, statusText } = res;
+      .then(response => {
+        const { status, data, statusText } = response;
         if (status === AXIOS_SUCCESS_CODE) {
           setUser(data);
         } else {
@@ -44,7 +44,7 @@ function SliderMenu(props) {
         }
       })
       .catch(error => {
-        message.error(error);
+        message.error(error.message);
       });
   }, []);
 
@@ -78,7 +78,11 @@ function SliderMenu(props) {
   };
 
   return (
-    <Sider trigger={null} className="slider-menu" collapsible collapsed={props.collapsed}>
+    <Sider
+      trigger={null}
+      className={`slider-menu ${width < maxIpadSize && 'max1024-slider-menu'}`}
+      collapsible
+      collapsed={props.collapsed}>
       <div className="slider-menu-logo" onClick={() => routerJump('/app')}>
         <img src={logo} alt="logo" />
         {props.collapsed ? null : <h1>商品管理</h1>}
@@ -87,7 +91,7 @@ function SliderMenu(props) {
         theme="dark"
         mode="inline"
         onClick={meunClick}
-        defaultSelectedKeys={['/app/in']}
+        defaultSelectedKeys={['/app']}
         defaultOpenKeys={defaultOpenKeys}
         selectedKeys={[activeMenu]}>
         {getMenu(meunArray)}

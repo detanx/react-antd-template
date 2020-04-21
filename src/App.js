@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:25:21
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 11:00:51
+ * @Last Modified time: 2020-04-21 17:31:51
  */
 import React, { useState } from 'react';
 import { Layout } from 'antd';
@@ -43,7 +43,10 @@ function App() {
             )}
             <Layout className="site-layout">
               <CommonHeader toggle={toggle} collapsed={collapsed} />
-              <Content className="site-layout-background">
+              <Content
+                className={`site-layout-background ${
+                  width < maxIpadSize && 'max1024-site-layout-background'
+                }`}>
                 <MyRouter />
               </Content>
             </Layout>

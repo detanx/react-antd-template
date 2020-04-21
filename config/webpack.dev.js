@@ -1,7 +1,7 @@
 // webpack.dev.js
 const webpack = require('webpack');
-const path = require('path');
 const merge = require('webpack-merge');
+// const path = require('path');
 // const apiMocker = require('mocker-api');
 const common = require('./webpack.common');
 
@@ -10,6 +10,7 @@ module.exports = merge(common, {
   devServer: {
     hot: true,
     port: 8080,
+    host: '0.0.0.0',
     open: true,
     inline: true,
     // before(app) {

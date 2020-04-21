@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:30:53
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 14:56:45
+ * @Last Modified time: 2020-04-21 17:29:52
  */
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -33,7 +33,7 @@ const CommonHeader = props => {
         }
       })
       .catch(error => {
-        message.error(error);
+        message.error(error.message);
       });
   };
   const menu = (
@@ -51,7 +51,9 @@ const CommonHeader = props => {
     </Menu>
   );
   return (
-    <Header className="common-header" style={{ padding: 0 }}>
+    <Header
+      className={`common-header ${width < maxIpadSize && 'max1024-common-header'}`}
+      style={{ padding: 0 }}>
       <div className="common-header-left">
         {width < maxIpadSize && (
           <img

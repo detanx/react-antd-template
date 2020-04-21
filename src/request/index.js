@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:26:45
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 15:10:11
+ * @Last Modified time: 2020-04-21 17:48:15
  */
 import axios from 'axios';
 import { Modal, message } from 'antd';
@@ -23,6 +23,8 @@ export const AXIOS_SUCCESS_CODE = 200; // 请求成功码
 
 const { confirm } = Modal;
 
+const NotCancleUrl = ['/stockserver/user/login-user'];
+
 axios.defaults.timeout = AXIOS_TIME_OUT; // 请求超时时间
 axios.defaults.withCredentials = true; // 请求携带cookie
 axios.defaults.baseURL = '';
@@ -31,7 +33,8 @@ const pending = []; // 声明一个数组用于存储每个请求的取消函数
 const { CancelToken } = axios;
 const removePending = config => {
   for (const p in pending) {
-    if (pending[p].u === `${config.url}&${config.method}`) {
+    const key = `${config.url}&${config.method}`;
+    if (pending[p].u === key && !NotCancleUrl.includes(config.url)) {
       // 当当前请求在数组中存在时执行函数体
       pending[p].f(); // 执行取消操作
       pending.splice(p, 1); // 把这条记录从数组中移除
