@@ -1,0 +1,43 @@
+@margin-width: 24px;
+.change-password {
+  &-top {
+    border-bottom: 1px solid #f0f0f0;
+    &-icon {
+      margin-top: @margin-width;
+      margin-left: @margin-width;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .module-header {
+      display: inline-block;
+    }
+  }
+  &-tip {
+    margin-top: 5px;
+    color: #CCC;
+    font-size: 12px;
+    text-indent: 10px;
+  }
+  &-cover {
+    margin: 0 auto;
+    max-width: 400px;
+    margin-top: @margin-width;
+    & > div {
+      margin-top: 20px;
+      .ant-input-prefix {
+        width: 80px;
+      }
+    }
+  }
+  
+  &-new-passwod {
+    margin: 10px 0;
+  }
+
+  &-submit-container {
+    text-align: center;
+    button {
+      width: 100%;
+    }
+  }
+}

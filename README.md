@@ -1,6 +1,6 @@
 ### 获取
 ```
-git clone git@github.com:detanx/react-antd-template.git
+git clone git@192.168.10.238:project/commodity-manage.git
 ```
 ### 开始
 ```

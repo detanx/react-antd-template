@@ -1,4 +1,8 @@
+# webstorm
+.idea
+
 # dependencies
+bower_components
 node_modules
 
 # analyz
@@ -6,6 +10,26 @@ analyz/*
 
 # misc
 .DS_Store
+*.DS_Store
+
+.AppleDouble
+.LSOverride
+.git
+.git/*
+*.bak
+.bowerrc
+dist
+build
+
+# Thumbnails
+._*
+.font-spider
+*.log
+.vscode
+docs/*
+.**cache**
+*.gz
+*.zip
 
 package-lock.json*
 npm-debug.log*

@@ -1,16 +1,11 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import { hot } from "react-hot-loader/root"
-import Parent from "./components/Parent"
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { hot } from 'react-hot-loader/root';
+import App from './App';
 
-const App = () => (
-  <div>
-    <Parent />
-  </div>
-)
-hot(App)
+hot(App);
 const render = Component => {
-  ReactDOM.render(<Component />, document.getElementById("root"))
-}
+  ReactDOM.render(<Component />, document.getElementById('root'));
+};
 
-render(App)
+render(App);

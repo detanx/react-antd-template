@@ -1,22 +1,23 @@
 // webpack.common.js
-const path = require("path")
-const webpack = require("webpack")
-const HtmlWebpackPlugin = require("html-webpack-plugin") // html模板
-const autoprefixer = require("autoprefixer")
-const MomentLocalesPlugin = require("moment-locales-webpack-plugin")
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // html模板
+const autoprefixer = require('autoprefixer');
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 
 // 从根目录开始
 function resolve(dir) {
-  return path.join(__dirname, "..", dir)
+  return path.join(__dirname, '..', dir);
 }
 
 module.exports = {
-  context: path.resolve(__dirname, "../"), // 入口起点根目录
-  entry: ["./src/index.js"],
+  context: path.resolve(__dirname, '../'), // 入口起点根目录
+  entry: ['./src/index.js'],
   output: {
-    path: resolve("build"),
-    filename: "[name].[hash:5].js",
-    chunkFilename: "static/js/[name].[contenthash:8].chunk.js"
+    path: resolve('build'),
+    publicPath: '/',
+    filename: '[name].[hash:5].js',
+    chunkFilename: 'static/js/[name].[contenthash:8].chunk.js'
   },
   module: {
     rules: [
@@ -24,45 +25,45 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: [
-          "cache-loader",
+          'cache-loader',
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
-              presets: ["@babel/preset-react"],
+              presets: ['@babel/preset-react'],
               plugins: [
-                "@babel/plugin-proposal-class-properties",
-                "@babel/plugin-syntax-dynamic-import"
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-syntax-dynamic-import'
               ]
             }
           },
-          "eslint-loader"
+          'eslint-loader'
         ]
       },
       {
         test: /\.(le|c)ss$/,
         use: [
-          "cache-loader",
-          "style-loader",
+          'cache-loader',
+          'style-loader',
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               importLoaders: 1
             }
           },
           {
-            loader: "postcss-loader",
+            loader: 'postcss-loader',
             options: {
               plugins() {
                 return [
                   autoprefixer({
-                    overrideBrowserslist: [">0.25%", "not dead"]
+                    overrideBrowserslist: ['>0.25%', 'not dead']
                   })
-                ]
+                ];
               }
             }
           },
           {
-            loader: "less-loader",
+            loader: 'less-loader',
             options: {
               javascriptEnabled: true
             }
@@ -71,47 +72,48 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|svg|gif)(\?.*)?$/,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           limit: 10240,
-          name: "static/img/[name].[hash:7].[ext]"
+          name: 'static/img/[name].[hash:7].[ext]'
         }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           limit: 10240,
-          name: "static/font/[name].[hash:7].[ext]"
+          name: 'static/font/[name].[hash:7].[ext]'
         }
       },
       {
         test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           limit: 10240,
-          name: "static/media/[name].[hash:7].[ext]"
+          name: 'static/media/[name].[hash:7].[ext]'
         }
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./public/index.html",
-      inject: "body"
+      template: './public/index.html',
+      inject: 'body'
     }),
-    new MomentLocalesPlugin(), // 剥离除 “en” 以外的所有语言环境。
+    new AntdDayjsWebpackPlugin(),
     new webpack.ProvidePlugin({
       // 全局变量
-      React: "react",
-      Component: ["react", "Component"],
-      PureComponent: ["react", "PureComponent"]
+      React: 'react',
+      Component: ['react', 'Component'],
+      PureComponent: ['react', 'PureComponent']
     })
   ],
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      "react-dom": "@hot-loader/react-dom"
+      'react-dom': '@hot-loader/react-dom',
+      '@': path.resolve(__dirname, '../src')
     }
   }
-}
+};

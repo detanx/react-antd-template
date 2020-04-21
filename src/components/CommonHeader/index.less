@@ -1,0 +1,40 @@
+.common-header {
+  display: flex;
+  height: 64px;
+  line-height: 64px;
+  background: #fff;
+  justify-content: space-between;
+  &-logo {
+    margin-left: 16px;
+    width: 32px;
+    cursor: pointer;
+  }
+  &-left {
+    .trigger {
+      position: relative;
+      top: 2px;
+      margin-left: 16px;
+      font-size: 20px;
+    }
+  }
+  &-right {
+    margin-right: 16px;
+    &-drop {
+      width: 120px;
+      cursor: pointer;
+      &:hover {
+        background-color: #f0f0f0;
+      }
+    }
+    &-user {
+      text-align: center;
+      img {
+        width: 24px;
+        margin-right: 8px;
+      }
+      span {
+        display: inline-block;
+      }
+    }
+  }
+}
