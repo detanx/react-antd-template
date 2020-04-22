@@ -1,8 +1,8 @@
 /*
  * @Author: 刘玉田
  * @Date: 2020-04-17 18:24:10
- * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 14:55:24
+ * @Last Modified by: 刘玉田
+ * @Last Modified time: 2020-04-22 15:57:09
  */
 import { useState } from 'react';
 import { Input, Button, message, Form, Card } from 'antd';
@@ -54,7 +54,6 @@ const AddAccount = () => {
         }
       })
       .catch(err => {
-        console.log(err.response);
         const { data } = err.response;
         const { error } = data;
         const info = `添加账号失败。${error || data}`;
@@ -79,7 +78,7 @@ const AddAccount = () => {
           <Form.Item
             name="username"
             label="用户名"
-            help="必须是2-20个英文字母、数字或符号"
+            extra="必须是2-20个英文字母、数字或符号"
             rules={[
               {
                 required: true
@@ -100,7 +99,7 @@ const AddAccount = () => {
           <Form.Item
             name="passwordSure"
             label="确认密码"
-            help="必须是6-20个英文字母、数字或符号"
+            extra="必须是6-20个英文字母、数字或符号"
             rules={[
               {
                 required: true

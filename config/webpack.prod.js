@@ -22,7 +22,16 @@ module.exports = merge(common, {
       DEV: JSON.stringify('production'), // 字符串
       FLAG: 'true' // FLAG 是个布尔类型
     }),
-    new Uglify(),
+    new Uglify({
+      uglifyOptions: {
+        compress: {
+          warnings: false,
+          drop_console: true, // console
+          pure_funcs: ['console.log'] // 移除console
+        }
+      },
+      parallel: true
+    }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].css', // 打包到static的css目录下

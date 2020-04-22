@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:30:53
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 17:29:52
+ * @Last Modified time: 2020-04-22 10:06:25
  */
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -38,15 +38,11 @@ const CommonHeader = props => {
   };
   const menu = (
     <Menu style={{ textAlign: 'center' }}>
-      <Menu.Item>
-        <span className="common-header-right-changepwd" onClick={() => routerJump('/password')}>
-          修改密码
-        </span>
+      <Menu.Item onClick={() => routerJump('/password')}>
+        <span className="common-header-right-changepwd">修改密码</span>
       </Menu.Item>
-      <Menu.Item>
-        <span className="common-header-right-out" onClick={loginOut}>
-          登出
-        </span>
+      <Menu.Item onClick={loginOut}>
+        <span className="common-header-right-out">登出</span>
       </Menu.Item>
     </Menu>
   );

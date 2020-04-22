@@ -1,8 +1,8 @@
 /*
  * @Author: 刘玉田
  * @Date: 2020-04-17 18:24:16
- * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 14:56:15
+ * @Last Modified by: 刘玉田
+ * @Last Modified time: 2020-04-22 15:57:01
  */
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,6 @@ const Authority = () => {
         }
       })
       .catch(err => {
-        console.log(err);
         message.error('请求失败');
       })
       .finally(() => setSearchLoading(false));
@@ -57,6 +56,7 @@ const Authority = () => {
         <Row gutter={[16, 16]} align="middle">
           <Col xs={24} sm={24} xl={10} lg={10}>
             <Input
+              style={{ fontSize: 16 }}
               placeholder="可通过账号搜索（不输入搜索全部）"
               className="search-input"
               ref={inputNode}

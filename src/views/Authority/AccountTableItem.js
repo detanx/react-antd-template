@@ -2,7 +2,7 @@
  * @Author: 刘玉田
  * @Date: 2020-04-21 15:48:31
  * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-21 17:13:45
+ * @Last Modified time: 2020-04-22 15:56:48
  */
 
 import { useState } from 'react';
@@ -14,7 +14,7 @@ const AccountTableItem = ({ value, deleteAccount }) => {
 
   const { isAdmin, permissions } = value;
   // 超级管理员 可以操作自身以及子用户 管理员，不能操作超级管理员
-  const isSuperAdmin = isAdmin && localStorage.getItem('user') === 'admin';
+  // const isSuperAdmin = isAdmin && localStorage.getItem('user') === 'admin';
   const defaultChecked = permissions.length > 0;
 
   function onChange(e) {
@@ -34,7 +34,6 @@ const AccountTableItem = ({ value, deleteAccount }) => {
         }
       })
       .catch(err => {
-        console.log(err);
         message.error('操作失败');
       })
       .finally(() => setLoading(false));
@@ -65,29 +64,26 @@ const AccountTableItem = ({ value, deleteAccount }) => {
         }
       })
       .catch(error => {
-        console.log(error);
         message.error('重置密码失败');
       });
   }
 
   function checkBoxDisabled() {
-    if (isSuperAdmin) {
-      return loading;
-    }
-    if (isAdmin && value.username === 'admin') {
-      return true;
-    }
-    return loading;
+    // 管理员不能取消自己的？
+    // if (isAdmin && value.username === localStorage.getItem('user')) {
+    //   return false;
+    // }
+    return isAdmin || loading;
   }
 
   return (
     <List.Item>
-      <Row className="flex-1" justify="space-between" align="middle">
-        <Col sm={8}>
+      <Row gutter={[0, { xs: 10, sm: 0, md: 0 }]} className="flex-1" align="middle">
+        <Col sm={9}>
           账号：
           {value.username}
         </Col>
-        <Col sm={8}>
+        <Col xs={24} sm={7}>
           权限：
           <Checkbox
             defaultChecked={defaultChecked}
@@ -97,25 +93,19 @@ const AccountTableItem = ({ value, deleteAccount }) => {
           </Checkbox>
         </Col>
         <Col sm={8}>
-          {!isAdmin && (
-            <Row align="middle" justify="end">
-              操作：
-              <Col>
-                <Button disabled={isAdmin} type="link" size="small" onClick={resetPassword}>
-                  重置密码
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  disabled={isAdmin}
-                  type="link"
-                  size="small"
-                  onClick={() => deleteAccount(value)}>
-                  删除账号
-                </Button>
-              </Col>
-            </Row>
-          )}
+          <Row align="middle" justify="end">
+            操作：
+            <Col>
+              <Button disabled={isAdmin} type="link" size="small" onClick={resetPassword}>
+                重置密码
+              </Button>
+            </Col>
+            <Col>
+              <Button disabled={isAdmin} type="link" onClick={() => deleteAccount(value)}>
+                删除账号
+              </Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </List.Item>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Form, Select, Input, Button, Divider } from 'antd';
 import { MinusCircleOutlined } from '@ant-design/icons';
-import moment from 'moment';
 import request, { AXIOS_SUCCESS_CODE } from '@/request/index';
+import { OPTION_ITEMS_LIST } from '@/common/constant';
 import './index.less';
 
 const { Option } = Select;
@@ -24,16 +24,16 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
     try {
       const values = await form.validateFields();
       const { resetFields } = form;
-      const arr = Object.keys(values.commodity)
+      const sortedCodeList = Object.keys(values.commodity)
         .filter(value => value.includes('code'))
         .map(value => value.slice(4))
         .sort((a, b) => a - b);
-      const sendValueObj = arr.reduce((pre, cur) => {
-        const obj = {
+      const sendValueObj = sortedCodeList.reduce((pre, cur) => {
+        const sendValueItem = {
           code: values.commodity[`code${cur}`],
           typeId: values.commodity[`typeId${cur}`]
         };
-        pre.push(obj);
+        pre.push(sendValueItem);
         return pre;
       }, []);
       onOk(sendValueObj, setCommodityNums, resetFields, setExistData);
@@ -72,9 +72,17 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
     }
   };
   const subtractNums = index => {
-    const arr = [...commodityNums];
-    arr.splice(index, 1);
-    setCommodityNums(arr);
+    const newCommodityNums = [...commodityNums];
+    newCommodityNums.splice(index, 1);
+    setCommodityNums(newCommodityNums);
+  };
+  const addCommodity = async () => {
+    try {
+      await form.validateFields();
+      setCommodityNums([...commodityNums, commodityNums[commodityNums.length - 1] + 1]);
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   };
   return (
     <Modal
@@ -90,6 +98,7 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
         setVisible(false);
         form.resetFields();
         setExistData([]);
+        setCommodityNums([1]);
       }}>
       <Form {...formItemLayout} form={form}>
         {commodityNums.map((value, index) => (
@@ -104,8 +113,11 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
                 }
               ]}>
               <Select onChange={selectValue => searchIsExist(selectValue, value, 1)}>
-                <Option value={1}>A商品</Option>
-                <Option value={2}>B商品</Option>
+                {OPTION_ITEMS_LIST.map(item => (
+                  <Option key={item.value} value={item.value}>
+                    {item.text}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item
@@ -124,8 +136,7 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
             </Form.Item>
             {existData[value] ? (
               <p className="repeat-hint">
-                {existData[value].lastOperator}于
-                {moment(existData[value].lastOperationTime).format('YYYY年MM月DD日 HH:mm:ss')}
+                {existData[value].lastOperator}
                 入库了相同编号产品
               </p>
             ) : null}
@@ -135,10 +146,11 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
                 style={{
                   position: 'absolute',
                   color: 'red',
-                  fontSize: 20,
-                  right: 10,
-                  top: 30,
-                  cursor: 'pointer'
+                  fontSize: 16,
+                  top: '3%',
+                  left: '95%',
+                  cursor: 'pointer',
+                  transform: 'translate(-50%,0)'
                 }}
               />
             )}
@@ -149,15 +161,10 @@ function RegisterModal({ visible, setVisible, spin, onOk }) {
           <Form.Item
             style={{ marginBottom: 0 }}
             wrapperCol={{
-              xs: { span: 24, offset: 2 },
+              xs: { span: 24, offset: 0 },
               sm: { span: 16, offset: 4 }
             }}>
-            <Button
-              type="primary"
-              style={{ marginRight: 20 }}
-              onClick={() =>
-                setCommodityNums([...commodityNums, commodityNums[commodityNums.length - 1] + 1])
-              }>
+            <Button type="primary" style={{ marginRight: 20 }} onClick={addCommodity}>
               添加商品+
             </Button>
           </Form.Item>

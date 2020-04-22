@@ -25,7 +25,6 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: [
-          'cache-loader',
           {
             loader: 'babel-loader',
             options: {
@@ -42,7 +41,6 @@ module.exports = {
       {
         test: /\.(le|c)ss$/,
         use: [
-          'cache-loader',
           'style-loader',
           {
             loader: 'css-loader',
@@ -112,7 +110,6 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      'react-dom': '@hot-loader/react-dom',
       '@': path.resolve(__dirname, '../src')
     }
   }
