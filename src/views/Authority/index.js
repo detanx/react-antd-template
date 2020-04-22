@@ -2,7 +2,7 @@
  * @Author: 刘玉田
  * @Date: 2020-04-17 18:24:16
  * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-22 15:57:01
+ * @Last Modified time: 2020-04-22 17:19:31
  */
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -31,7 +31,7 @@ const Authority = () => {
           message.error('请求失败');
         }
       })
-      .catch(err => {
+      .catch(() => {
         message.error('请求失败');
       })
       .finally(() => setSearchLoading(false));

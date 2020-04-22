@@ -2,7 +2,7 @@
  * @Author: 刘玉田
  * @Date: 2020-04-21 15:48:31
  * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-22 15:56:48
+ * @Last Modified time: 2020-04-22 17:19:55
  */
 
 import { useState } from 'react';
@@ -33,7 +33,7 @@ const AccountTableItem = ({ value, deleteAccount }) => {
           message.error('操作失败');
         }
       })
-      .catch(err => {
+      .catch(() => {
         message.error('操作失败');
       })
       .finally(() => setLoading(false));
@@ -63,7 +63,7 @@ const AccountTableItem = ({ value, deleteAccount }) => {
           message.error('重置密码失败');
         }
       })
-      .catch(error => {
+      .catch(() => {
         message.error('重置密码失败');
       });
   }

@@ -2,7 +2,7 @@
  * @Author: 刘玉田
  * @Date: 2020-04-17 18:26:55
  * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-22 15:56:40
+ * @Last Modified time: 2020-04-22 17:21:01
  */
 import { useEffect, useState } from 'react';
 import { List, message, Modal } from 'antd';
@@ -24,7 +24,7 @@ const AccountTable = ({ queryData, isSearching }) => {
           message.error('获取用户列表失败');
         }
       })
-      .catch(error => {
+      .catch(() => {
         message.error('获取用户列表失败');
       })
       .finally(() => setLoading(false));
@@ -67,7 +67,7 @@ const AccountTable = ({ queryData, isSearching }) => {
           message.error('删除账号失败');
         }
       })
-      .catch(error => {
+      .catch(() => {
         message.error('删除账号失败');
       });
   }
