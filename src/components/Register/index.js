@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:31:22
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 14:57:03
+ * @Last Modified time: 2020-04-23 14:59:57
  */
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
@@ -59,7 +59,7 @@ const Register = () => {
           message.error(response.statusText);
         }
       })
-      .catch(error => {
+      .catch(() => {
         message.error('用户已存在', 1);
       });
   };

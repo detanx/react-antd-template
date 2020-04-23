@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy } from 'react';
 import {
   Button,
   Input,
@@ -8,19 +8,20 @@ import {
   Pagination,
   Tag,
   message,
-  ConfigProvider,
   Spin,
-  Card
+  Card,
+  Form,
+  Row,
+  Col
 } from 'antd';
 import moment from 'dayjs';
 import { DeleteOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import zhCN from 'antd/es/locale/zh_CN';
 import request, { AXIOS_SUCCESS_CODE } from '@/request/index';
 import { OPTION_ITEMS_LIST } from '@/common/constant';
-import RegisterModal from './RegisterModal';
 import './index.less';
 
 const { Option } = Select;
+const RegisterModal = lazy(() => import('./RegisterModal'));
 
 function CommodityManager() {
   const hasAddClass = useRef(false);
@@ -155,48 +156,49 @@ function CommodityManager() {
     if (index === data.length - 1) {
       return (
         <List.Item className={item.clazz}>
-          <div className="com-mana-list-content">
-            <span className="com-mana-list-item com-mana-list-item-number">
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-                商品编号：
-              </span>
+          <Row style={{ width: '100%' }}>
+            <Col xxl={4} xl={8} lg={12} md={12} sm={24} xs={24} className={'com-list-col'}>
+              <span>商品编号：</span>
               <span>{item.code}</span>
-            </span>
-            <span className="com-mana-list-item com-mana-list-item-number">
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-                商品类型：
-              </span>
-              <span>{['A商品', 'B商品'][item.typeId - 1]}</span>
-            </span>
-            <span className="com-mana-list-item com-mana-list-item-status">
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>状态：</span>
+            </Col>
+            <Col xxl={4} xl={8} lg={12} md={12} sm={24} xs={24} className={'com-list-col'}>
+              <span>商品类型：</span>
+              <span>{OPTION_ITEMS_LIST[item.typeId - 1].text}</span>
+            </Col>
+            <Col
+              xxl={4}
+              xl={8}
+              lg={12}
+              md={12}
+              sm={24}
+              xs={24}
+              className={'com-list-col com-list-status'}>
+              <span>状态：</span>
               <Tag color={item.status === 1 ? 'green' : 'yellow'}>
                 {['已入库', '已消耗'][item.status - 1]}
               </Tag>
-            </span>
-            <span className="com-mana-list-item com-mana-list-item-operator">
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-                操作人：
-              </span>
+            </Col>
+            <Col xxl={4} xl={8} lg={12} md={12} sm={24} xs={24} className={'com-list-col'}>
+              <span>操作人：</span>
               <span>{item.lastOperator}</span>
-            </span>
-            <span className="com-mana-list-item com-mana-list-item-time">
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-                创建时间：
-              </span>
+            </Col>
+            <Col xxl={4} xl={8} lg={12} md={12} sm={24} xs={24} className={'com-list-col'}>
+              <span>创建时间：</span>
               <span>{moment(item.lastOperationTime).format('YYYY/MM/DD HH:mm')}</span>
-            </span>
-            <span
-              className="com-mana-list-item com-mana-list-item-handle"
+            </Col>
+            <Col
+              xxl={4}
+              xl={8}
               style={{
+                textAlign: 'right',
                 visibility:
                   userInfo.hasPermissions &&
                   (userInfo.username === item.lastOperator || userInfo.username === 'admin')
                     ? 'visible'
                     : 'hidden'
               }}>
-              <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>操作：</span>
-              <span className={'com-handle-span'}>
+              <span>操作：</span>
+              <span>
                 {item.status === 2 ? null : (
                   <a
                     style={{ marginRight: 10, cursor: 'pointer' }}
@@ -210,8 +212,8 @@ function CommodityManager() {
                   <span>删除</span>
                 </a>
               </span>
-            </span>
-          </div>
+            </Col>
+          </Row>
         </List.Item>
       );
     }
@@ -231,46 +233,42 @@ function CommodityManager() {
 
     return (
       <List.Item className={item.clazz}>
-        <div className="com-mana-list-content">
-          <span className="com-mana-list-item com-mana-list-item-number">
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-              商品编号：
-            </span>
+        <Row style={{ width: '100%' }}>
+          <Col xxl={4} xl={8} className={'com-list-col'}>
+            <span>商品编号：</span>
             <span>{item.code}</span>
-          </span>
-          <span className="com-mana-list-item com-mana-list-item-number">
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-              商品类型：
-            </span>
-            <span>{['A商品', 'B商品'][item.typeId - 1]}</span>
-          </span>
-          <span className="com-mana-list-item com-mana-list-item-status">
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>状态：</span>
+          </Col>
+          <Col xxl={4} xl={8} className={'com-list-col'}>
+            <span>商品类型：</span>
+            <span>{OPTION_ITEMS_LIST[item.typeId - 1].text}</span>
+          </Col>
+          <Col xxl={4} xl={8} className={'com-list-col'}>
+            <span>状态：</span>
             <Tag color={item.status === 1 ? 'green' : 'yellow'}>
               {['已入库', '已消耗'][item.status - 1]}
             </Tag>
-          </span>
-          <span className="com-mana-list-item com-mana-list-item-operator">
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>操作人：</span>
+          </Col>
+          <Col xxl={4} xl={8} className={'com-list-col'}>
+            <span>操作人：</span>
             <span>{item.lastOperator}</span>
-          </span>
-          <span className="com-mana-list-item com-mana-list-item-time">
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>
-              创建时间：
-            </span>
+          </Col>
+          <Col xxl={4} xl={8} className={'com-list-col'}>
+            <span>创建时间：</span>
             <span>{moment(item.lastOperationTime).format('YYYY/MM/DD HH:mm')}</span>
-          </span>
-          <span
-            className="com-mana-list-item com-mana-list-item-handle"
+          </Col>
+          <Col
+            xxl={4}
+            xl={8}
             style={{
+              textAlign: 'right',
               visibility:
                 userInfo.hasPermissions &&
                 (userInfo.username === item.lastOperator || userInfo.username === 'admin')
                   ? 'visible'
                   : 'hidden'
             }}>
-            <span style={{ display: 'inline-block', textAlign: 'right', width: 75 }}>操作：</span>
-            <span className={'com-handle-span'}>
+            <span>操作：</span>
+            <span>
               {item.status === 2 ? null : (
                 <a
                   style={{ marginRight: 10, cursor: 'pointer' }}
@@ -284,96 +282,92 @@ function CommodityManager() {
                 <span>删除</span>
               </a>
             </span>
-          </span>
-        </div>
+          </Col>
+        </Row>
       </List.Item>
     );
   };
   return (
     <Spin size="large" spinning={listSpinning}>
-      <ConfigProvider locale={zhCN}>
-        <div className="com-mana-container">
-          <h2 className="com-mana-header">商品管理</h2>
-          <div className="com-mana-search">
-            <div className="com-choose">
-              <span style={{ width: 75 }}>商品类型：</span>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: 'calc(100% - 75px)'
-                }}>
-                <Select
-                  defaultValue={1}
-                  onChange={value => setValues({ ...values, ...{ typeId: value } })}>
-                  {OPTION_ITEMS_LIST.map(value => (
-                    <Option key={value.value} value={value.value}>
-                      {value.text}
-                    </Option>
-                  ))}
-                </Select>
-              </div>
-            </div>
-            <div className="com-choose">
-              <span style={{ width: 75 }}>商品状态：</span>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: 'calc(100% - 75px)'
-                }}>
-                <Select defaultValue={''} onChange={handleChange}>
-                  <Option value={''}>全部</Option>
-                  <Option value={1}>已入库</Option>
-                  <Option value={2}>已消耗</Option>
-                  <Option value={3}>重复商品</Option>
-                </Select>
-              </div>
-            </div>
-            <div className="com-numbers">
-              <span style={{ flex: '0 0 75px' }}>商品编号：</span>
-              <Input
-                placeholder="请输入商品编号"
-                onChange={e => setValues({ ...values, ...{ code: e.target.value } })}
-              />
-            </div>
-            <div className="search-btn">
-              <Button onClick={handleSearch} style={{ marginRight: 16 }}>
-                <SearchOutlined />
-                <span>查询</span>
+      <div className="com-mana-container">
+        <Card
+          title="商品管理"
+          extra={
+            userInfo.hasPermissions ? (
+              <Button type={'primary'} onClick={() => setVisible(true)}>
+                <PlusOutlined />
+                <span>入库</span>
               </Button>
-              {userInfo.hasPermissions ? (
-                <Button type={'primary'} onClick={() => setVisible(true)}>
-                  <PlusOutlined />
-                  <span>入库</span>
-                </Button>
-              ) : null}
-            </div>
-          </div>
-          <Card style={{ background: '#fff', marginTop: 25, border: 'none' }}>
-            <List bordered dataSource={data} renderItem={renderItem} />
-          </Card>
+            ) : null
+          }>
+          <Form>
+            <Row>
+              <Col xxl={5} xl={6} lg={24} sm={24} xs={24}>
+                <Form.Item label="商品类型">
+                  <Select
+                    defaultValue={1}
+                    onChange={value => setValues({ ...values, ...{ typeId: value } })}>
+                    {OPTION_ITEMS_LIST.map(value => (
+                      <Option key={value.value} value={value.value}>
+                        {value.text}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xl={{ span: 5, offset: 1 }} lg={24} sm={24} xs={24}>
+                <Form.Item label="商品状态">
+                  <Select defaultValue={''} onChange={handleChange}>
+                    <Option value={''}>全部</Option>
+                    <Option value={1}>已入库</Option>
+                    <Option value={2}>已消耗</Option>
+                    <Option value={3}>重复商品</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xl={{ span: 5, offset: 1 }} lg={24} sm={24} xs={24}>
+                <Form.Item label="商品编号">
+                  <Input
+                    placeholder="请输入商品编号"
+                    onChange={e => setValues({ ...values, ...{ code: e.target.value } })}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xxl={7} xl={6} lg={24} sm={24} xs={24}>
+                <Form.Item style={{ textAlign: 'right' }}>
+                  <Button onClick={handleSearch}>
+                    <SearchOutlined />
+                    <span>查询</span>
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
 
-          <Pagination
-            total={responseData.total || 0}
-            showTotal={total => `共 ${total} 条`}
-            current={values.page}
-            pageSize={values.size}
-            showSizeChanger={false}
-            showQuickJumper={true}
-            pageSizeOptions={['10', '30']}
-            onChange={page => setValues({ ...values, ...{ page } })}
-            onShowSizeChange={(current, size) => setValues({ ...values, ...{ page: 1, size } })}
-            style={{ background: 'white', textAlign: 'right', padding: '15px 1% 15px 0' }}
-          />
-          <RegisterModal
-            visible={visible}
-            setVisible={setVisible}
-            spin={handleSpinning}
-            onOk={addCommodity}
-          />
-        </div>
-      </ConfigProvider>
+        <Card style={{ background: '#fff', marginTop: 25, border: 'none' }}>
+          <List bordered dataSource={data} renderItem={renderItem} />
+        </Card>
+
+        <Pagination
+          total={responseData.total || 0}
+          showTotal={total => `共 ${total} 条`}
+          current={values.page}
+          pageSize={values.size}
+          showSizeChanger={false}
+          showQuickJumper={true}
+          pageSizeOptions={['10', '30']}
+          onChange={page => setValues({ ...values, ...{ page } })}
+          onShowSizeChange={(current, size) => setValues({ ...values, ...{ page: 1, size } })}
+          style={{ background: 'white', textAlign: 'right', padding: '15px 1% 15px 0' }}
+        />
+        <RegisterModal
+          visible={visible}
+          setVisible={setVisible}
+          spin={handleSpinning}
+          onOk={addCommodity}
+        />
+      </div>
     </Spin>
   );
 }

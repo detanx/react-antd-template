@@ -2,17 +2,16 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:31:41
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 17:37:07
+ * @Last Modified time: 2020-04-23 11:42:13
  */
-import React, { useState, useEffect } from 'react';
-import { Menu, Layout, message } from 'antd';
-import { useHistory } from 'react-router-dom';
-import { withRouter } from 'react-router';
 import useWinSize, { maxIpadSize } from '@/hooks/useWinSize';
-import request, { AXIOS_SUCCESS_CODE } from '@/request/index';
 import logo from '@/imgs/logo.svg';
-import { defaultOpenKeys, meunArray } from './meunConfig';
+import request, { AXIOS_SUCCESS_CODE } from '@/request/index';
+import { Layout, Menu, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useHistory, withRouter } from 'react-router-dom';
 import './index.less';
+import { defaultOpenKeys, meunArray } from './meunConfig';
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;

@@ -29,7 +29,7 @@ module.exports = {
     "prettier",
   ],
   "rules": {
-    "no-unused-vars": process.env.NODE_ENV === 'production' ? 2 : 0,
+    "no-unused-vars": 2,
     "no-console":  0,
     "prettier/prettier": "error",
     //关闭换行符操作系统格式问题

@@ -2,7 +2,7 @@
  * @Author: 刘玉田
  * @Date: 2020-04-17 18:24:16
  * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-22 17:19:31
+ * @Last Modified time: 2020-04-23 10:28:07
  */
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -52,9 +52,17 @@ const Authority = () => {
 
   return (
     <section className="authority-control">
-      <Card title="权限管理">
-        <Row gutter={[16, 16]} align="middle">
-          <Col xs={24} sm={24} xl={10} lg={10}>
+      <Card
+        title="权限管理"
+        extra={
+          <Link to="/app/limit/add-account">
+            <Button type="primary" icon={<PlusOutlined />}>
+              添加账号
+            </Button>
+          </Link>
+        }>
+        <Row gutter={[1, 16]} align="middle">
+          <Col xs={16} sm={16} xl={10} lg={10}>
             <Input
               style={{ fontSize: 16 }}
               placeholder="可通过账号搜索（不输入搜索全部）"
@@ -65,7 +73,7 @@ const Authority = () => {
               allowClear
             />
           </Col>
-          <Col xs={24} sm={24} xl={14} lg={14}>
+          <Col xs={8} sm={8} xl={14} lg={14}>
             <div style={{ textAlign: 'right' }}>
               <Space size={16}>
                 <Button
@@ -75,11 +83,6 @@ const Authority = () => {
                   icon={<SearchOutlined />}>
                   查询
                 </Button>
-                <Link to="/app/limit/add-account">
-                  <Button type="primary" icon={<PlusOutlined />}>
-                    添加账号
-                  </Button>
-                </Link>
               </Space>
             </div>
           </Col>

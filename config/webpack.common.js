@@ -11,7 +11,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  context: path.resolve(__dirname, '../'), // 入口起点根目录
+  context: resolve('/'), // 入口起点根目录
   entry: ['./src/index.js'],
   output: {
     path: resolve('build'),
@@ -110,7 +110,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@': path.resolve(__dirname, '../src')
+      '@': resolve('src')
     }
   }
 };
