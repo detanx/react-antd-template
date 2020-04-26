@@ -1,8 +1,8 @@
 /*
  * @Author: tangxudong
  * @Date: 2020-04-17 18:31:22
- * @Last Modified by: 刘玉田
- * @Last Modified time: 2020-04-22 17:21:16
+ * @Last Modified by: tangxudong
+ * @Last Modified time: 2020-04-26 10:07:42
  */
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
@@ -39,6 +39,7 @@ function Login() {
   const [form] = Form.useForm();
 
   const onFinish = values => {
+    history.push('/app');
     request('/stockserver/user/login', 'PUT', values)
       .then(response => {
         const { status, data, statusText } = response;

@@ -2,7 +2,7 @@
  * @Author: tangxudong
  * @Date: 2020-04-17 18:31:53
  * @Last Modified by: tangxudong
- * @Last Modified time: 2020-04-21 12:04:16
+ * @Last Modified time: 2020-04-26 10:08:10
  */
 import { ShopOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
@@ -34,7 +34,7 @@ export const meunArray = [
     key: '/app/limit',
     title: '用户管理',
     icon: UsergroupAddOutlined,
-    roles: ['true'],
+    roles: ['true', 'false'],
     link: '/app/limit'
     //   }
     // ]

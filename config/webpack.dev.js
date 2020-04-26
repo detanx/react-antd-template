@@ -18,7 +18,7 @@ module.exports = merge(common, {
     // },
     proxy: {
       '/stockserver': {
-        target: 'https://very.smelly.rocks',
+        target: 'http://192.168.10.60:8080',
         changeOrigin: true,
         secure: false
       }
